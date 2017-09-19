@@ -2,11 +2,11 @@ language: go
 
 before_install:
         - echo -e "Starting"
-        - sudo apt-get install libboost-dev libboost-test-dev libboost-program-options-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev
-        - wget http://ftp.ps.pl/pub/apache/thrift/0.10.0/thrift-0.10.0.tar.gz
-        - ls
-        - tar xfz thrift-0.10.0.tar.gz
-        - cd thrift-0.10.0 && ./configure && sudo make install
+        - echo sudo apt-get install libboost-dev libboost-test-dev libboost-program-options-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev
+        - echo wget http://ftp.ps.pl/pub/apache/thrift/0.10.0/thrift-0.10.0.tar.gz
+        - echo ls
+        - echo tar xfz thrift-0.10.0.tar.gz
+        - echo cd thrift-0.10.0 && ./configure && sudo make install
 
 script: ./build-rpc-agent.sh --thrift-exec $PWD/thrift --erase-on-steps
 
