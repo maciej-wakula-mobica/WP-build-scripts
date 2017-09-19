@@ -15,6 +15,8 @@ DO_SDK='y'  # Generate SDK thrift sources
 BUILD_SDK_LIST='node,java,go,python2,cs'  # SDK thrift sources  to generate
 VER="TestVersion"  # Version name of rpc-agent to build
 
+EXEC_THRIFT='thrift'
+
 set -e # Exit on any error
 set -u
 #set -v
@@ -48,6 +50,10 @@ while [[ "${#}" -gt 0 ]] ; do
 	--build-sdk)
 		DO_SDK='y'
 		;;
+	--thrift-exec)
+		shift 1
+		EXEC_THRIFT="${1}"
+		;;
 	--help)
 		echo "Usage: ${0} [options]"
 		echo "Example: ${0} --cleanup --get --install --build-sdk"
@@ -62,6 +68,8 @@ while [[ "${#}" -gt 0 ]] ; do
 		echo "    Install (or not) the compiled binaries"
 		echo "  --build-sdk"
 		echo "    Build (or not) the sdk thrift sources"
+		echo "  --thrift-exec '/path/to/thrift'"
+		echo "    Provide custom path to thrift executable"
 		exit 0
 		;;
 	*)
@@ -69,21 +77,22 @@ while [[ "${#}" -gt 0 ]] ; do
 		exit 1
 		;;
 	esac
+	shift 1
 done
 
 # Just ensure that required binaries are present on the system
 #TODO echo "Checking for 'id'" && id -u >/dev/null
 echo "Checking for dependencies..."
-which thrift || { echo "No 'thrift' executable in PATH"; exit 1; }
-which zip || { echo "No 'zip' in PATH" >&2; exit 1; }
-which tar || { echo "No 'tar' in PATH" >&2; exit 1; }
+which ${EXEC_THRIFT} || { echo "No 'thrift' executable in PATH"; exit 1; }  # Potentially unsafe
 which git || { echo "No 'git' in PATH" >&2; exit 1; }
 which sh || { echo "No 'sh' in PATH" >&2; exit 1; }
 which go || { echo "No 'gi' in PATH" >&2; exit 1; }
 which id || { echo "No 'id' in PATH... missing coreutils?" >&2; exit 1; }
 which rm || { echo "No 'rm' in PATH... missing coreutils?" >&2; exit 1; }
 which mkdir || { echo "No 'mkdir' in PATH... missing coreutils?" >&2; exit 1; }
-which date || { echo "WARNING: No 'date' in PATH thus build might fail to fetch current date for the build"; }
+which date || { echo "WARNING: No 'date' in PATH thus build might fail to fetch current date for the build" >&2; }
+which zip || { echo "WARNING: No 'zip' in PATH thus build might encounter errors" >&2; }
+which tar || { echo "WARNING: No 'tar' in PATH thus build might encounter errors" >&2; }
 echo "all OK."
 
 # TODO: Fetch thrift exec
@@ -143,23 +152,23 @@ fi
 cd "${THRIFT_DEFS_PATH}"
 rm -rf gen-go
 rm -rf "${SRC}/src/${THRIFT_GO_PKG_PREFIX}"
-thrift -r --gen go:package_prefix="${THRIFT_GO_PKG_PREFIX}" wpwithin.thrift
+${EXEC_THRIFT} -r --gen go:package_prefix="${THRIFT_GO_PKG_PREFIX}" wpwithin.thrift
 if [[ "${DO_SDK}" == 'y' ]] ; then
 	if [[ ",${BUILD_SDK_LIST}," == *,node,* ]] ; then
-		thrift -r --gen js:node wpwithin.thrift
+		${EXEC_THRIFT} -r --gen js:node wpwithin.thrift
 		#cp -rf gen-nodejs "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
 	fi
 	if [[ ",${BUILD_SDK_LIST}," == *,python2,* ]] ; then
-		thrift -r --gen py wpwithin.thrift
+		${EXEC_THRIFT} -r --gen py wpwithin.thrift
 	fi
 	#if [[ ",${BUILD_SDK_LIST}," == *,go,* ]] ; then
 	#	thrift -r --gen go:node wpwithin.thrift
 	#fi
 	if [[ ",${BUILD_SDK_LIST}," == *,cs,* ]] ; then
-		thrift -r --gen csharp:nullable wpwithin.thrift
+		${EXEC_THRIFT} -r --gen csharp:nullable wpwithin.thrift
 	fi
 	if [[ ",${BUILD_SDK_LIST}," == *,java,* ]] ; then
-		thrift -r --gen java wpwithin.thrift
+		${EXEC_THRIFT} -r --gen java wpwithin.thrift
 	fi
 fi
 mv -f gen-go "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
