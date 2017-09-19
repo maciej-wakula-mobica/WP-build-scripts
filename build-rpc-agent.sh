@@ -17,6 +17,9 @@ VER="TestVersion"  # Version name of rpc-agent to build
 
 EXEC_THRIFT='thrift'
 OPT_ERASE='n'
+START_STR=''
+END_STR=''
+CURRENT_STEP=''
 
 set -e # Exit on any error
 set -u
@@ -57,6 +60,8 @@ while [[ "${#}" -gt 0 ]] ; do
 		;;
 	--erase-on-steps)
 		OPT_ERASE='y'
+		START_STR=`echo -n -e "\e[0Ktravis_fold:start:"`
+		END_STR=`echo -n -e "\e[0Ktravis_fold:end:"`
 		;;
 	--help)
 		echo "Usage: ${0} [options]"
@@ -84,10 +89,24 @@ while [[ "${#}" -gt 0 ]] ; do
 	shift 1
 done
 
+
+function Section {
+	OLD_STEP="${CURRENT_STEP}"
+	CURRENT_STEP="${1}"
+	[[ "${OPT_ERASE}" == n ]] && return
+	[[ -n "${OLD_STEP}" ]] && {
+		echo "${END_STR}${OLD_STEP}"
+		STEP=''
+	}
+	echo "${START_STR}${CURRENT_STEP}";
+}
+echo "${STEP}"
+
+}
+
 # Just ensure that required binaries are present on the system
 #TODO echo "Checking for 'id'" && id -u >/dev/null
-[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
-echo "Checking for dependencies..."
+Section "Checking for dependencies"
 which ${EXEC_THRIFT} || { echo "No 'thrift' executable in PATH"; exit 1; }  # Potentially unsafe
 which git || { echo "No 'git' in PATH" >&2; exit 1; }
 which sh || { echo "No 'sh' in PATH" >&2; exit 1; }
@@ -109,16 +128,14 @@ echo "all OK."
 
 # CLEANUP before doing anything
 if [[ "${DO_CLEANUP}" == y ]] ; then
-	[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
-	echo "Performing cleanup: rm -rf ${SRC} ..."
+	Section "Performing cleanup"
 	rm -rf "${SRC}"
 	cd "${SRC}"
 fi
 
 # Clone or update sources
 if [[ "${DO_GET}" == y ]] ; then
-	[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
-	echo "Fetching sources ..."
+	Section "Fetching sources ..."
 	mkdir -p "${SRC}/src"
 	cd "${SRC}"
 	export GOPATH="${PWD}"
@@ -163,8 +180,7 @@ rm -rf gen-go
 rm -rf "${SRC}/src/${THRIFT_GO_PKG_PREFIX}"
 ${EXEC_THRIFT} -r --gen go:package_prefix="${THRIFT_GO_PKG_PREFIX}" wpwithin.thrift
 if [[ "${DO_SDK}" == 'y' ]] ; then
-	[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
-	echo "Generating thrift sources for SDK"
+	Section "Generating thrift sources for SDK"
 	if [[ ",${BUILD_SDK_LIST}," == *,node,* ]] ; then
 		${EXEC_THRIFT} -r --gen js:node wpwithin.thrift
 		#cp -rf gen-nodejs "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
@@ -185,11 +201,13 @@ fi
 mv -f gen-go "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
 
 
+Section "Build rps-agents"
 cd "${RPCSRC}"
 go get .
 sh build-all.sh -v${VER}
+
 if [[ "${DO_INSTALL}" == 'y' ]] ; then
-	[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
+	Section "Generate thrift for SDKs"
 	if [[ -n "${WPW_HOME}" && -d "${WPW_HOME}" ]] ; then
 		mkdir -p "${WPW_HOME}"
 		cp build/* "${WPW_HOME}/"
