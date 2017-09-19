@@ -1,5 +1,5 @@
 #!/bin/bash
-SRC='${HOME}/src/WorldPay/rpc-agent'
+SRC="${HOME}/src/WorldPay/rpc-agent"
 GIT_CORE_GO="https://github.com/wptechinnovation/wpw-sdk-go.git"
 CORE_PATH="${SRC}/src/github.com/wptechinnovation/wpw-sdk-go"
 RPCSRC="${CORE_PATH}/applications/rpc-agent"
