@@ -7,6 +7,9 @@ before_install:
         - echo ls
         - echo tar xfz thrift-0.10.0.tar.gz
         - echo cd thrift-0.10.0 && echo ./configure && echo sudo make install
+        - uname -a
+        - cat /etc/*eleas*
+        - false
 
 script: ./build-rpc-agent.sh --thrift-exec $PWD/thrift --erase-on-steps
 
