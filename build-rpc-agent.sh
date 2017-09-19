@@ -16,6 +16,7 @@ BUILD_SDK_LIST='node,java,go,python2,cs'  # SDK thrift sources  to generate
 VER="TestVersion"  # Version name of rpc-agent to build
 
 EXEC_THRIFT='thrift'
+OPT_ERASE='n'
 
 set -e # Exit on any error
 set -u
@@ -54,6 +55,9 @@ while [[ "${#}" -gt 0 ]] ; do
 		shift 1
 		EXEC_THRIFT="${1}"
 		;;
+	--erase-on-steps)
+		OPT_ERASE='y'
+		;;
 	--help)
 		echo "Usage: ${0} [options]"
 		echo "Example: ${0} --cleanup --get --install --build-sdk"
@@ -82,6 +86,7 @@ done
 
 # Just ensure that required binaries are present on the system
 #TODO echo "Checking for 'id'" && id -u >/dev/null
+[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
 echo "Checking for dependencies..."
 which ${EXEC_THRIFT} || { echo "No 'thrift' executable in PATH"; exit 1; }  # Potentially unsafe
 which git || { echo "No 'git' in PATH" >&2; exit 1; }
@@ -104,12 +109,16 @@ echo "all OK."
 
 # CLEANUP before doing anything
 if [[ "${DO_CLEANUP}" == y ]] ; then
+	[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
+	echo "Performing cleanup: rm -rf ${SRC} ..."
 	rm -rf "${SRC}"
 	cd "${SRC}"
 fi
 
 # Clone or update sources
 if [[ "${DO_GET}" == y ]] ; then
+	[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
+	echo "Fetching sources ..."
 	mkdir -p "${SRC}/src"
 	cd "${SRC}"
 	export GOPATH="${PWD}"
@@ -154,6 +163,8 @@ rm -rf gen-go
 rm -rf "${SRC}/src/${THRIFT_GO_PKG_PREFIX}"
 ${EXEC_THRIFT} -r --gen go:package_prefix="${THRIFT_GO_PKG_PREFIX}" wpwithin.thrift
 if [[ "${DO_SDK}" == 'y' ]] ; then
+	[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
+	echo "Generating thrift sources for SDK"
 	if [[ ",${BUILD_SDK_LIST}," == *,node,* ]] ; then
 		${EXEC_THRIFT} -r --gen js:node wpwithin.thrift
 		#cp -rf gen-nodejs "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
@@ -178,6 +189,7 @@ cd "${RPCSRC}"
 go get .
 sh build-all.sh -v${VER}
 if [[ "${DO_INSTALL}" == 'y' ]] ; then
+	[[ "${OPT_ERASE}" == y ]] && echo -n -e "\e[0K"
 	if [[ -n "${WPW_HOME}" && -d "${WPW_HOME}" ]] ; then
 		mkdir -p "${WPW_HOME}"
 		cp build/* "${WPW_HOME}/"

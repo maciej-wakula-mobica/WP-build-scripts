@@ -3,5 +3,5 @@ language: go
 before_install:
         - echo -e "Starting"
 
-script: ./build-rpc-agent.sh --thrift-exec $PWD/thrift
+script: ./build-rpc-agent.sh --thrift-exec $PWD/thrift --erase-on-steps
 
