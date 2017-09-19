@@ -96,12 +96,9 @@ function Section {
 	[[ "${OPT_ERASE}" == n ]] && return
 	[[ -n "${OLD_STEP}" ]] && {
 		echo "${END_STR}${OLD_STEP}"
-		STEP=''
+		CURRENT_STEP=''
 	}
 	echo "${START_STR}${CURRENT_STEP}";
-}
-echo "${STEP}"
-
 }
 
 # Just ensure that required binaries are present on the system
