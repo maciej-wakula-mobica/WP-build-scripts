@@ -9,7 +9,7 @@ before_install:
  - cd thrift-0.10.0
  - ./configure --enable-static --disable-tests --disable-libs --disable-plugin --disable-tutorial --disable-coverage --without-qt4 --without-qt5 --without-c_glib --with-csharp --with-java --without-erlang --with-nodejs --without-lua --with-python --without-perl --without-php --without-php_extension --without-dart --without-ruby --without-haskell --with-go --without-haxe --without-d
  - make 
- - ls /compiler/cpp/thrift
+ - ls ./compiler/cpp/thrift
  # - sudo make install
  # - sudo apt-add-repository "deb http://archive.ubuntu.com/ubuntu/ trusty main restricted" -y
  # - sudo apt-get update -qq
