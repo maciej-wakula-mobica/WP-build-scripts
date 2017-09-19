@@ -20,6 +20,9 @@ OPT_ERASE='n'
 START_STR=''
 END_STR=''
 CURRENT_STEP=''
+STEP_MSG=''
+PRE_MSG=''
+POST_MSG=''
 
 set -e # Exit on any error
 set -u
@@ -62,6 +65,8 @@ while [[ "${#}" -gt 0 ]] ; do
 		OPT_ERASE='y'
 		START_STR=`echo -n -e "\e[0Ktravis_fold:start:"`
 		END_STR=`echo -n -e "\e[0Ktravis_fold:end:"`
+		PRE_MSG=`echo -n -e "\e[0K\e[33;1m"`
+		POST_MSG=`echo -n -e "\e\w[0m"`
 		;;
 	--help)
 		echo "Usage: ${0} [options]"
@@ -92,11 +97,12 @@ done
 
 function Section {
 	OLD_STEP="${CURRENT_STEP}"
-	CURRENT_STEP="${1}"
+	STEP_MSG="${1}"
+	CURRENT_STEP=$(echo "${1}"|sed 's/[^a-z_]//g')
 	[[ "${OPT_ERASE}" == n ]] && return
 	[[ -n "${OLD_STEP}" ]] && {
 		echo "${END_STR}${OLD_STEP}"
-		CURRENT_STEP=''
+		echo "${PRE_MSG}${STEP_MSG}${POST_MSG}"
 	}
 	echo "${START_STR}${CURRENT_STEP}";
 }
