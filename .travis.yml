@@ -6,7 +6,7 @@ before_install:
         - echo wget http://ftp.ps.pl/pub/apache/thrift/0.10.0/thrift-0.10.0.tar.gz
         - echo ls
         - echo tar xfz thrift-0.10.0.tar.gz
-        - echo cd thrift-0.10.0 && ./configure && sudo make install
+        - echo cd thrift-0.10.0 && echo ./configure && echo sudo make install
 
 script: ./build-rpc-agent.sh --thrift-exec $PWD/thrift --erase-on-steps
 
