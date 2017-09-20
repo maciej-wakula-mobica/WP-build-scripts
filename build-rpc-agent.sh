@@ -17,13 +17,14 @@ VER="TestVersion"  # Version name of rpc-agent to build
 
 EXEC_THRIFT='thrift'
 OPT_ERASE='n'
-START_STR=''
-END_STR=''
+PRESTART_STR=''
+POSTSTART_STR=''
+PREEND_STR=''
 POSTEND_STR=''
+PREMSG_STR=''
+POSTMSG_STR=''
 CURRENT_STEP=''
 STEP_MSG=''
-PRE_MSG=''
-POST_MSG=''
 
 set -e # Exit on any error
 set -u
@@ -64,11 +65,13 @@ while [[ "${#}" -gt 0 ]] ; do
 		;;
 	--travis-mark-steps)
 		OPT_ERASE='y'
-		START_STR=`echo -n -e "\e[0Ktravis_fold:start:"`
-		END_STR=`echo -n -e "travis_fold:end:"`
+		PRESTART_STR=`echo -n -e "travis_fold:start:"`
+		#POSTSTART_STR=`echo -n -e "\n\e[0K"`
+		POSTSTART_STR=`echo -n -e "\n"`
+		PREMSG_STR=`echo -n -e "\e[0K\e[33;1m"`
+		POSTMSG_STR=`echo -n -e "\e[0m\n"`
+		PREEND_STR=`echo -n -e "travis_fold:end:"`
 		POSTEND_STR=`echo -n -e "\n\e[0K"`
-		PRE_MSG=`echo -n -e "\e[0K\n\e[33;1m"`
-		POST_MSG=`echo -n -e "\e[0m"`
 		;;
 	--help)
 		echo "Usage: ${0} [options]"
@@ -102,11 +105,15 @@ function Section {
 	STEP_MSG="${1}"
 	CURRENT_STEP=$(echo "${1}"|sed 's/ /_/g'|sed 's/[^A-Za-z_]/./g')
 	[[ "${OPT_ERASE}" == n ]] && return
+	# Close old section
 	[[ -n "${OLD_STEP}" ]] && {
-		echo "${END_STR}${OLD_STEP}${POSTEND_STR}"
-		echo "${PRE_MSG}${STEP_MSG}${POST_MSG}"
+		echo -n "${END_STR}${OLD_STEP}${POSTEND_STR}"
 	}
-	[[ -n "${CURRENT_STEP}" ]] && echo "${START_STR}${CURRENT_STEP}";
+	# Init new section
+	[[ -n "${CURRENT_STEP}" ]] && {
+		echo -n "${START_STR}${CURRENT_STEP}${POSTSTART_STR}";
+		echo -n "${PRE_MSG}${STEP_MSG}${POST_MSG}"
+	}
 }
 
 # Just ensure that required binaries are present on the system
