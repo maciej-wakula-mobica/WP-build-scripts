@@ -229,5 +229,5 @@ if [[ "${DO_INSTALL}" == 'y' ]] ; then
 	fi
 fi
 
-Section
+Section ""
 exit 0
