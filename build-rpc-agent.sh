@@ -19,6 +19,7 @@ EXEC_THRIFT='thrift'
 OPT_ERASE='n'
 START_STR=''
 END_STR=''
+POSTEND_STR=''
 CURRENT_STEP=''
 STEP_MSG=''
 PRE_MSG=''
@@ -64,7 +65,8 @@ while [[ "${#}" -gt 0 ]] ; do
 	--travis-mark-steps)
 		OPT_ERASE='y'
 		START_STR=`echo -n -e "\e[0Ktravis_fold:start:"`
-		END_STR=`echo -n -e "\e[0Ktravis_fold:end:"`
+		END_STR=`echo -n -e "travis_fold:end:"`
+		POSTEND_STR=`echo -n -e "\n\e[0K"`
 		PRE_MSG=`echo -n -e "\e[0K\n\e[33;1m"`
 		POST_MSG=`echo -n -e "\e[0m"`
 		;;
@@ -101,10 +103,10 @@ function Section {
 	CURRENT_STEP=$(echo "${1}"|sed 's/ /_/g'|sed 's/[^A-Za-z_]/./g')
 	[[ "${OPT_ERASE}" == n ]] && return
 	[[ -n "${OLD_STEP}" ]] && {
-		echo "${END_STR}${OLD_STEP}"
+		echo "${END_STR}${OLD_STEP}${POSTEND_STR}"
 		echo "${PRE_MSG}${STEP_MSG}${POST_MSG}"
 	}
-	echo "${START_STR}${CURRENT_STEP}";
+	[[ -n "${CURRENT_STEP}" ]] && echo "${START_STR}${CURRENT_STEP}";
 }
 
 # Just ensure that required binaries are present on the system
@@ -219,3 +221,5 @@ if [[ "${DO_INSTALL}" == 'y' ]] ; then
 	fi
 fi
 
+Section
+exit 0
