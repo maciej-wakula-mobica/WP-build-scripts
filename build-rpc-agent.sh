@@ -18,6 +18,7 @@ VER="TestVersion"  # Version name of rpc-agent to build
 EXEC_THRIFT='thrift'
 OPT_ERASE='n'
 GIT_PULL='false'
+GIT_BRANCH=''
 
 PRESTART_STR=''
 POSTSTART_STR=''
@@ -79,6 +80,10 @@ while [[ "${#}" -gt 0 ]] ; do
 	--go-git-pull)
 		shift 1
 		GIT_PULL="${1}"
+		;;
+	--go-git-branch)
+		shift 1
+		GIT_BRANCH="${1}"
 		;;
 	--help)
 		echo "Usage: ${0} [options]"
@@ -183,6 +188,11 @@ if [[ "${DO_GET}" == y ]] ; then
 		cd -
 	}
 
+	if [[ -n "${GIT_BRANCH}" ]] ; then
+		echo "Fetching branch ${GIT_BRANCH}"
+		cd "${CORE_PATH}"
+		git checkout -qf "${GIT_BRANCH}"
+	fi
 	if [[ "${GIT_PULL}" != 'false' ]] ; then
 		echo "Fetching pull request"
 		cd "${CORE_PATH}"
