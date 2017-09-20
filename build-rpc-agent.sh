@@ -211,7 +211,7 @@ sh build-all.sh -v${VER}
 
 if [[ "${DO_INSTALL}" == 'y' ]] ; then
 	Section "Generate thrift for SDKs"
-	if [[ -n "${WPW_HOME}" && -d "${WPW_HOME}" ]] ; then
+	if [[ -n "${WPW_HOME:=}" && -d "${WPW_HOME}" ]] ; then
 		mkdir -p "${WPW_HOME}"
 		cp build/* "${WPW_HOME}/"
 	else
