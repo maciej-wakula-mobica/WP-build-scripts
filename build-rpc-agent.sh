@@ -135,7 +135,7 @@ env
 which ${EXEC_THRIFT} || { echo "No 'thrift' executable in PATH"; exit 1; }  # Potentially unsafe
 which git || { echo "No 'git' in PATH" >&2; exit 1; }
 which sh || { echo "No 'sh' in PATH" >&2; exit 1; }
-which go || { echo "No 'gi' in PATH" >&2; exit 1; }
+which go || { echo "No 'go' in PATH" >&2; exit 1; }
 which id || { echo "No 'id' in PATH... missing coreutils?" >&2; exit 1; }
 which rm || { echo "No 'rm' in PATH... missing coreutils?" >&2; exit 1; }
 which mkdir || { echo "No 'mkdir' in PATH... missing coreutils?" >&2; exit 1; }
@@ -256,4 +256,5 @@ if [[ "${DO_INSTALL}" == 'y' ]] ; then
 fi
 
 Section ""
+echo "Success"
 exit 0
