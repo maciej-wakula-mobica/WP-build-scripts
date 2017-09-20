@@ -115,17 +115,20 @@ done
 function Section {
 	OLD_STEP="${CURRENT_STEP}"
 	STEP_MSG="${1}"
-	CURRENT_STEP=$(echo "${1}"|sed 's/ /_/g'|sed 's/[^A-Za-z_]/./g')
 	[[ "${OPT_ERASE}" == n ]] && return
 	# Close old section
 	[[ -n "${OLD_STEP}" ]] && {
 		echo "${PREEND_STR}${OLD_STEP}${POSTEND_STR}"
 	}
-	# Init new section
-	[[ -n "${CURRENT_STEP}" ]] && {
-		echo "${PRESTART_STR}${CURRENT_STEP}${POSTSTART_STR}";
-		echo "${PREMSG_STR}${STEP_MSG}${POSTMSG_STR}"
+	[[ -n "${STEP_MSG}" ]] && {
+		# Init new section
+		CURRENT_STEP=$(echo "${STEP_MSG}"|sed 's/ /_/g'|sed 's/[^A-Za-z_]/./g')
+		[[ -n "${CURRENT_STEP}" ]] && {
+			echo "${PRESTART_STR}${CURRENT_STEP}${POSTSTART_STR}";
+			echo "${PREMSG_STR}${STEP_MSG}${POSTMSG_STR}"
+		}
 	}
+	return 0
 }
 
 # Just ensure that required binaries are present on the system
@@ -243,8 +246,6 @@ mv -f gen-go "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
 Section "Build rps-agents"
 cd "${RPCSRC}"
 go get .
-set -v
-set -x
 sh build-all.sh -v${VER}
 
 if [[ "${DO_INSTALL}" == 'y' ]] ; then
