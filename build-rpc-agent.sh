@@ -17,6 +17,8 @@ VER="TestVersion"  # Version name of rpc-agent to build
 
 EXEC_THRIFT='thrift'
 OPT_ERASE='n'
+GIT_PULL='false'
+
 PRESTART_STR=''
 POSTSTART_STR=''
 PREEND_STR=''
@@ -73,6 +75,10 @@ while [[ "${#}" -gt 0 ]] ; do
 		POSTMSG_STR=`echo -e "\e[0m"`
 		PREEND_STR=`echo -n -e "travis_fold:end:"`
 		POSTEND_STR=`echo -n -e "\n\e[0K"`
+		;;
+	--go-git-pull)
+		shift 1
+		GIT_PULL="${1}"
 		;;
 	--help)
 		echo "Usage: ${0} [options]"
@@ -176,6 +182,13 @@ if [[ "${DO_GET}" == y ]] ; then
 		git checkout 0.10.0
 		cd -
 	}
+
+	if [[ "${GIT_PULL}" != 'false' ]] ; then
+		echo "Fetching pull request"
+		cd "${CORE_PATH}"
+		git fetch origin "+refs/pull/${GIT_PULL}/merge"
+		git checkout -qf FETCH_HEAD
+	fi
 
 	echo "Using develop branch for non-working thrift v11"
 
