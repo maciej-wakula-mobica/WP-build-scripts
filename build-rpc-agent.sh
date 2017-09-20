@@ -61,12 +61,12 @@ while [[ "${#}" -gt 0 ]] ; do
 		shift 1
 		EXEC_THRIFT="${1}"
 		;;
-	--erase-on-steps)
+	--travis-mark-steps)
 		OPT_ERASE='y'
 		START_STR=`echo -n -e "\e[0Ktravis_fold:start:"`
 		END_STR=`echo -n -e "\e[0Ktravis_fold:end:"`
 		PRE_MSG=`echo -n -e "\e[0K\e[33;1m"`
-		POST_MSG=`echo -n -e "\e\w[0m"`
+		POST_MSG=`echo -n -e "\e[0m"`
 		;;
 	--help)
 		echo "Usage: ${0} [options]"
