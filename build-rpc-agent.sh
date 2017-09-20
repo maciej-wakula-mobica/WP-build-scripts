@@ -65,7 +65,7 @@ while [[ "${#}" -gt 0 ]] ; do
 		OPT_ERASE='y'
 		START_STR=`echo -n -e "\e[0Ktravis_fold:start:"`
 		END_STR=`echo -n -e "\e[0Ktravis_fold:end:"`
-		PRE_MSG=`echo -n -e "\e[0K\e[33;1m"`
+		PRE_MSG=`echo -n -e "\e[0K\n\e[33;1m"`
 		POST_MSG=`echo -n -e "\e[0m"`
 		;;
 	--help)
@@ -98,7 +98,7 @@ done
 function Section {
 	OLD_STEP="${CURRENT_STEP}"
 	STEP_MSG="${1}"
-	CURRENT_STEP=$(echo "${1}"|sed 's/[^a-z_]//g')
+	CURRENT_STEP=$(echo "${1}"|sed 's/ /_/g'|sed 's/[^A-Za-z_]/./g')
 	[[ "${OPT_ERASE}" == n ]] && return
 	[[ -n "${OLD_STEP}" ]] && {
 		echo "${END_STR}${OLD_STEP}"
