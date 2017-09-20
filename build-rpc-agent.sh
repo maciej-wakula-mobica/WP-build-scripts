@@ -120,6 +120,7 @@ function Section {
 # Just ensure that required binaries are present on the system
 #TODO echo "Checking for 'id'" && id -u >/dev/null
 Section "Checking for dependencies"
+env
 which ${EXEC_THRIFT} || { echo "No 'thrift' executable in PATH"; exit 1; }  # Potentially unsafe
 which git || { echo "No 'git' in PATH" >&2; exit 1; }
 which sh || { echo "No 'sh' in PATH" >&2; exit 1; }
@@ -175,6 +176,8 @@ if [[ "${DO_GET}" == y ]] ; then
 		git checkout 0.10.0
 		cd -
 	}
+
+	echo "Using develop branch for non-working thrift v11"
 
 	# Use thrift to generate sources
 	cd "${SRC}"
