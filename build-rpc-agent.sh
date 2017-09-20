@@ -243,7 +243,7 @@ fi
 mv -f gen-go "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
 
 
-Section "Build rps-agents"
+Section "Build rpc-agents for supported platforms"
 cd "${RPCSRC}"
 go get .
 ./build-all.sh -v${VER}
@@ -259,5 +259,4 @@ if [[ "${DO_INSTALL}" == 'y' ]] ; then
 fi
 
 Section ""
-echo "Success"
 exit 0
