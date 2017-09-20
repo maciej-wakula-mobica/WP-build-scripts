@@ -243,6 +243,8 @@ mv -f gen-go "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
 Section "Build rps-agents"
 cd "${RPCSRC}"
 go get .
+set -v
+set -x
 sh build-all.sh -v${VER}
 
 if [[ "${DO_INSTALL}" == 'y' ]] ; then
