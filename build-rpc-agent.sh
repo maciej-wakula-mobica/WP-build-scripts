@@ -67,7 +67,7 @@ while [[ "${#}" -gt 0 ]] ; do
 		OPT_ERASE='y'
 		PRESTART_STR=`echo -n -e "travis_fold:start:"`
 		#POSTSTART_STR=`echo -n -e "\n\e[0K"`
-		POSTSTART_STR=`echo -e ""`
+		POSTSTART_STR=''
 		#PREMSG_STR=`echo -n -e "\e[0K\e[33;1m"`
 		PREMSG_STR=`echo -n -e "\e[0K\e[44;1m\e[30;1m"`
 		POSTMSG_STR=`echo -e "\e[0m"`
@@ -108,12 +108,12 @@ function Section {
 	[[ "${OPT_ERASE}" == n ]] && return
 	# Close old section
 	[[ -n "${OLD_STEP}" ]] && {
-		echo -n "${PREEND_STR}${OLD_STEP}${POSTEND_STR}"
+		echo "${PREEND_STR}${OLD_STEP}${POSTEND_STR}"
 	}
 	# Init new section
 	[[ -n "${CURRENT_STEP}" ]] && {
-		echo -n "${PRESTART_STR}${CURRENT_STEP}${POSTSTART_STR}";
-		echo -n "${PREMSG_STR}${STEP_MSG}${POSTMSG_STR}"
+		echo "${PRESTART_STR}${CURRENT_STEP}${POSTSTART_STR}";
+		echo "${PREMSG_STR}${STEP_MSG}${POSTMSG_STR}"
 	}
 }
 
