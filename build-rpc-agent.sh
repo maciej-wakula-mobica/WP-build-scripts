@@ -67,10 +67,10 @@ while [[ "${#}" -gt 0 ]] ; do
 		OPT_ERASE='y'
 		PRESTART_STR=`echo -n -e "travis_fold:start:"`
 		#POSTSTART_STR=`echo -n -e "\n\e[0K"`
-		POSTSTART_STR=`echo -n -e "\n"`
+		POSTSTART_STR=`echo -e ""`
 		#PREMSG_STR=`echo -n -e "\e[0K\e[33;1m"`
 		PREMSG_STR=`echo -n -e "\e[0K\e[44;1m\e[30;1m"`
-		POSTMSG_STR=`echo -n -e "\e[0m\n"`
+		POSTMSG_STR=`echo -e "\e[0m"`
 		PREEND_STR=`echo -n -e "travis_fold:end:"`
 		POSTEND_STR=`echo -n -e "\n\e[0K"`
 		;;
