@@ -19,6 +19,7 @@ EXEC_THRIFT='thrift'
 OPT_ERASE='n'
 GIT_PULL='false'
 GIT_BRANCH=''
+TEST_SCRIPT="${CORE_PATH}/tests/testE2E.sh"
 
 PRESTART_STR=''
 POSTSTART_STR=''
@@ -85,6 +86,10 @@ while [[ "${#}" -gt 0 ]] ; do
 		shift 1
 		GIT_BRANCH="${1}"
 		;;
+	--test-script)
+		shift 1
+		TEST_SCRIPT="${1}"
+		;;
 	--help)
 		echo "Usage: ${0} [options]"
 		echo "Example: ${0} --cleanup --get --install --build-sdk"
@@ -101,6 +106,12 @@ while [[ "${#}" -gt 0 ]] ; do
 		echo "    Build (or not) the sdk thrift sources"
 		echo "  --thrift-exec '/path/to/thrift'"
 		echo "    Provide custom path to thrift executable"
+		echo "  --test-script '/path/to/the/script'"
+		echo "    Run custom tests script"
+		echo "    Set to empty string to disable tests"
+		echo "    Current path is ${TEST_SCRIPT}"
+		#echo "  --"
+		#echo "    "
 		exit 0
 		;;
 	*)
@@ -256,6 +267,12 @@ if [[ "${DO_INSTALL}" == 'y' ]] ; then
 	else
 		echo "Cannot install as WPW_HOME is not set" >&2
 	fi
+fi
+
+if [[ -n "${TEST_SCRIPT}" && -f "${TEST_SCRPT}" && -x "${TEST_SCRIPT}" ]] ; then
+	Section "Running E2E tests"
+	cd "${TEST_SCRIPT%/*}"
+	${TEST_SCRIPT}
 fi
 
 Section ""
