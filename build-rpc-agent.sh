@@ -269,7 +269,7 @@ if [[ "${DO_INSTALL}" == 'y' ]] ; then
 	fi
 fi
 
-if [[ -n "${TEST_SCRIPT}" && -f "${TEST_SCRPT}" && -x "${TEST_SCRIPT}" ]] ; then
+if [[ -n "${TEST_SCRIPT}" && -f "${TEST_SCRIPT}" && -x "${TEST_SCRIPT}" ]] ; then
 	Section "Running E2E tests"
 	cd "${TEST_SCRIPT%/*}"
 	${TEST_SCRIPT}
