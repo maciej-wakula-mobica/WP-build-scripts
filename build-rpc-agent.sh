@@ -142,6 +142,9 @@ function Section {
 	return 0
 }
 
+trap "echo \"${PREEND_STR}ScriptStart${POSTEND_STR}"$'\n'"${PREMSG_STR}Ended ${0} with status $?${POSTMSG_STR}\"" EXIT
+echo "${PRESTART_STR}ScriptStart${POSTSTART_STR}"$'\n'"${PREMSG_STR}Starting ${0}${POSTMSG_STR}"
+
 # Just ensure that required binaries are present on the system
 #TODO echo "Checking for 'id'" && id -u >/dev/null
 Section "Checking for dependencies"
@@ -149,6 +152,7 @@ env
 which ${EXEC_THRIFT} || { echo "No 'thrift' executable in PATH"; exit 1; }  # Potentially unsafe
 which git || { echo "No 'git' in PATH" >&2; exit 1; }
 which sh || { echo "No 'sh' in PATH" >&2; exit 1; }
+which sed || { echo "No 'sed' in PATH" >&2; exit 1; }
 which go || { echo "No 'go' in PATH" >&2; exit 1; }
 which id || { echo "No 'id' in PATH... missing coreutils?" >&2; exit 1; }
 which rm || { echo "No 'rm' in PATH... missing coreutils?" >&2; exit 1; }
@@ -237,6 +241,7 @@ if [[ "${DO_SDK}" == 'y' ]] ; then
 	if [[ ",${BUILD_SDK_LIST}," == *,node,* ]] ; then
 		${EXEC_THRIFT} -r --gen js:node wpwithin.thrift
 		#cp -rf gen-nodejs "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
+		ls -l gen-js
 	fi
 	if [[ ",${BUILD_SDK_LIST}," == *,python2,* ]] ; then
 		${EXEC_THRIFT} -r --gen py wpwithin.thrift
