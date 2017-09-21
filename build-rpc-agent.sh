@@ -232,29 +232,36 @@ fi
 # UPDATE TODO
 # DONE
 
+Section "Generating thrift sources for SDK"
+# At least thrift GO is required to build the rpc-agent
 cd "${THRIFT_DEFS_PATH}"
 rm -rf gen-go
 rm -rf "${SRC}/src/${THRIFT_GO_PKG_PREFIX}"
 ${EXEC_THRIFT} -r --gen go:package_prefix="${THRIFT_GO_PKG_PREFIX}" wpwithin.thrift
+ls -l gen-go
 if [[ "${DO_SDK}" == 'y' ]] ; then
-	Section "Generating thrift sources for SDK"
 	if [[ ",${BUILD_SDK_LIST}," == *,node,* ]] ; then
 		${EXEC_THRIFT} -r --gen js:node wpwithin.thrift
 		#cp -rf gen-nodejs "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
-		ls -l gen-js
+		ls -l gen-nodejs
 	fi
 	if [[ ",${BUILD_SDK_LIST}," == *,python2,* ]] ; then
 		${EXEC_THRIFT} -r --gen py wpwithin.thrift
+		ls -l gen-py
 	fi
 	#if [[ ",${BUILD_SDK_LIST}," == *,go,* ]] ; then
 	#	thrift -r --gen go:node wpwithin.thrift
 	#fi
 	if [[ ",${BUILD_SDK_LIST}," == *,cs,* ]] ; then
 		${EXEC_THRIFT} -r --gen csharp:nullable wpwithin.thrift
+		ls -l gen-csharp
 	fi
 	if [[ ",${BUILD_SDK_LIST}," == *,java,* ]] ; then
 		${EXEC_THRIFT} -r --gen java wpwithin.thrift
+		ls -l gen-java
 	fi
+else
+	echo "Only go sources were generated (required by rpc-agent). Skipping other sources generation."
 fi
 mv -f gen-go "${SRC}/src/${THRIFT_GO_PKG_PREFIX%/}"
 

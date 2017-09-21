@@ -4,29 +4,6 @@ before_install:
  - echo -e "Starting"
  - echo "TRAVIS_BRANCH $TRAVIS_BRANCH , TRAVIS_BUILD_DIR $TRAVIS_BUILD_DIR , TRAVIS_COMMIT $TRAVIS_COMMIT , TRAVIS_COMMIT_RANGE $TRAVIS_COMMIT_RANGE"
  - /bin/bash --version
- # - sudo apt-get install libboost-dev libboost-test-dev libboost-program-options-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev
- # - wget http://ftp.ps.pl/pub/apache/thrift/0.10.0/thrift-0.10.0.tar.gz
- # - ls
- # - tar xfz thrift-0.10.0.tar.gz
- # - cd thrift-0.10.0
- # - ./configure --enable-static --disable-tests --disable-libs --disable-plugin --disable-tutorial --disable-coverage --without-qt4 --without-qt5 --without-c_glib --with-csharp --with-java --without-erlang --with-nodejs --without-lua --with-python --without-perl --without-php --without-php_extension --without-dart --without-ruby --without-haskell --with-go --without-haxe --without-d
- # - make 
- # - ls ./compiler/cpp/thrift
- # - sudo make install
- # - sudo apt-add-repository "deb http://archive.ubuntu.com/ubuntu/ trusty main restricted" -y
- # - sudo apt-get update -qq
- # - sudo apt-get install -qq libpango-1.0-0 libqt4-dev qtbase5-dev qtbase5-dev-tools qt5-default libboost-dev libboost-test-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libboost-thread-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev make cmake git debhelper bc nsis ninja-build
- # - dpkg -S /usr/include/boost/version.hpp
- # - sudo apt-get install -qq ant openjdk-7-jdk
- # - sudo update-java-alternatives -s java-1.7.0-openjdk-amd64
- # - sudo apt-get install -qq python-all python-all-dev python-all-dbg python-setuptools python-support python-twisted python-six python3-six
- # - echo "golang-go golang-go/dashboard boolean false" | debconf-set-selections
- # - sudo apt-get -y install -qq golang golang-go
- # - sudo apt-get install -qq nodejs nodejs-dev npm
- # - sudo update-alternatives --install /usr/bin/node node /usr/bin/nodejs 10
- # - sudo apt-get install -qq mono-gmcs mono-devel libmono-system-web2.0-cil
- # - sudo apt-get install -qq mingw32 mingw32-binutils mingw32-runtime nsis
 
 script: ${TRAVIS_BUILD_DIR}/build-rpc-agent.sh --thrift-exec $PWD/thrift --travis-mark-steps --no-install --go-git-branch develop
-#script: ./build-rpc-agent.sh --thrift-exec $PWD/thrift --travis-mark-steps --no-install --go-git-pull $TRAVIS_PULL_REQUEST
 
