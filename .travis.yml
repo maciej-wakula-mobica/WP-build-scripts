@@ -1,0 +1,9 @@
+language: go
+
+before_install:
+ - echo -e "Starting"
+ - echo "TRAVIS_BRANCH $TRAVIS_BRANCH , TRAVIS_BUILD_DIR $TRAVIS_BUILD_DIR , TRAVIS_COMMIT $TRAVIS_COMMIT , TRAVIS_COMMIT_RANGE $TRAVIS_COMMIT_RANGE"
+ - /bin/bash --version
+
+script: ${TRAVIS_BUILD_DIR}/build-rpc-agent.sh --thrift-exec $PWD/thrift --travis-mark-steps --no-install --go-git-branch develop
+
