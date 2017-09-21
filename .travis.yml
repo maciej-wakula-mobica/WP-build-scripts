@@ -28,6 +28,5 @@ before_install:
  # - sudo apt-get install -qq mingw32 mingw32-binutils mingw32-runtime nsis
 
 script: ${TRAVIS_BUILD_DIR}/build-rpc-agent.sh --thrift-exec $PWD/thrift --travis-mark-steps --no-install --go-git-branch develop
-script: ~/src/WorldPay/rpc-agent/src/github.com/wptechinnovation/wpw-sdk-go/tests/testE2E.sh
 #script: ./build-rpc-agent.sh --thrift-exec $PWD/thrift --travis-mark-steps --no-install --go-git-pull $TRAVIS_PULL_REQUEST
 
